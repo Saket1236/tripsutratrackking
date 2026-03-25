@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TripSutra SOS Tracking</title>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <style>
+    #map { height: 100vh; }
+  </style>
+</head>
+
+<body>
+<div id="map"></div>
+
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get("id");
+
+  const firebaseConfig = {
+    // 🔴 ADD YOUR CONFIG HERE
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  const map = L.map('map').setView([20, 78], 5);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+  let marker;
+
+  firebase.database().ref("sos/" + id).on("value", (snapshot) => {
+    const data = snapshot.val();
+
+    if (!data) return;
+
+    const lat = data.lat;
+    const lng = data.lng;
+
+    map.setView([lat, lng], 15);
+
+    if (!marker) {
+      marker = L.marker([lat, lng]).addTo(map);
+    } else {
+      marker.setLatLng([lat, lng]);
+    }
+  });
+</script>
+
+</body>
+</html>
