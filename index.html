@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>TripSutra SOS Tracking</title>
+  <title>TripSutra SOS</title>
+
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js"></script>
+
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
   <style>
     #map { height: 100vh; }
   </style>
@@ -19,19 +22,23 @@
   const id = urlParams.get("id");
 
   const firebaseConfig = {
-    // 🔴 ADD YOUR CONFIG HERE
-  };
+  apiKey: "AIzaSyBpZlomfxpqveFhVV7w3FU-QjaQfLB7dHk",
+  authDomain: "tripsutra-3efaa.firebaseapp.com",
+  databaseURL: "https://tripsutra-3efaa-default-rtdb.firebaseio.com",
+  projectId: "tripsutra-3efaa",
+};
 
   firebase.initializeApp(firebaseConfig);
 
   const map = L.map('map').setView([20, 78], 5);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+    .addTo(map);
 
   let marker;
 
-  firebase.database().ref("sos/" + id).on("value", (snapshot) => {
-    const data = snapshot.val();
-
+  firebase.database().ref("sos/" + id).on("value", (snap) => {
+    const data = snap.val();
     if (!data) return;
 
     const lat = data.lat;
